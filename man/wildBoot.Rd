@@ -1,5 +1,7 @@
 \name{wildBoot}
+
 \alias{wildBoot}
+\alias{print.wildBoot}
 
 \title{
 Wild Bootstrap Tests for Error Autocorrelation
@@ -11,7 +13,9 @@ This function runs Ahlgren and Catani's (2016) wild bootstrap (WB) test for erro
 wildBoot(test, WBtype = c("recursive", "fixed"), B = 199, 
          WBdist = c("rademacher", "normal", "mammen"), 
          HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), univariate = FALSE)
+\method{print}{wildBoot}(x, ...)
 }
+
 
 \arguments{
   \item{test}{
@@ -32,6 +36,8 @@ a vector of the \code{HCtype}'s used for the WB test. The types must have been u
   \item{univariate}{
 either \code{FALSE}, \code{TRUE}, or \code{"only"}. If \code{TRUE}, the test will also be performed univariatly, if \code{"only"}, only the univariate version will be used. For \code{TRUE} and \code{"only"}, the univariate version must have been used in the \code{test} object.
 }
+  \item{x}{Object with class attribute \sQuote{wildBoot}.}
+  \item{\dots}{further arguments passed to or from other methods.}
 }
 
 \value{

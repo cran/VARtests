@@ -118,11 +118,5 @@ VARfit(y = y, p = 1, const = TRUE, exogen = exo)
 
 \dontrun{
 
-# The function can also use a model estimated by 
-#  the 'VAR' function in package 'vars' as a DGP:
-library(vars)
-data(Canada)
 
-fit2 <- vars::VAR(vars::Canada, p = 2, type = "both")
-y <- VARsim(fittedModel = fit2)
 }}

@@ -1,5 +1,7 @@
 \name{ACtest}
+
 \alias{ACtest}
+\alias{print.ACtest}
 
 \title{
 Test for Error Autocorrelation in VAR Models.
@@ -10,7 +12,10 @@ Performs LM tests for error AC in VAR models. The code is based on Paul Catani's
 
 \usage{
 ACtest(fit, h = 4, HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), univariate = FALSE)
+\method{print}{ACtest}(x, ...)
 }
+
+
 
 \arguments{
 
@@ -26,6 +31,8 @@ a vector containing some or all (default) of \code{"LM"}, \code{"HC0"}, \code{"H
   \item{univariate}{
 either \code{FALSE}, \code{TRUE}, or \code{"only"}. If \code{TRUE}, the test will also be performed in its univariate form, if \code{"only"}, only the univariate version will be used.
 }
+  \item{x}{Object with class attribute \sQuote{ACtest}.}
+  \item{\dots}{further arguments passed to or from other methods.}
 }
 
 \details{

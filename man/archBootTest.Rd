@@ -1,6 +1,7 @@
 \name{archBootTest}
 
 \alias{archBootTest}
+\alias{print.archBootTest}
 
 \title{
 Combined LM test for ARCH errors in VAR models.
@@ -18,7 +19,9 @@ The tests of Eklund and \enc{Teräsvirta}{Terasvirta} (2007), as well as the Mul
 \usage{
 archBootTest(fit, h = 2, B = 499, CA = TRUE, ET = TRUE, MARCH = TRUE,
              dist = "norm", skT.param = c(0, 1, 0, 5))
+\method{print}{archBootTest}(x, ...)
 }
+
 
 \arguments{
 
@@ -44,8 +47,10 @@ if \code{TRUE}, the Multivariate LM test for ARCH will run. See e.g. \enc{Lütke
 the error distribution. Either \code{"norm"} for the standard normal distribution, or \code{"skT"} for the skew-t distribution. The parameters of the skew-t distribution can be set with the \code{skT.param} argument. Can also be a function that returns random draws as an (N-p) x K matrix or a vector of length (N-p) * K.
 }
   \item{skT.param}{
-a vector of four parameters for the skew-t distribution in case \code{"skT"} was used for the \code{dist} argument. The function \code{\link[sn:rmst]{rmst}} is used to draw the errors and the parameters are passed as \code{skT.param = c(xi, Omega, alpha, nu)}
+a vector of four parameters for the skew-t distribution in case \code{"skT"} was used for the \code{dist} argument. The function \code{\link[sn:dmst]{rmst}} is used to draw the errors and the parameters are passed as \code{skT.param = c(xi, Omega, alpha, nu)}
 }
+  \item{x}{Object with class attribute \sQuote{archBootTest}.}
+  \item{\dots}{further arguments passed to or from other methods.}
 }
 
 \details{

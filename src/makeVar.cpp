@@ -1,8 +1,13 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::export(name = ".makeVar")]]
-arma::mat makeVar(arma::mat Ystart, arma::mat e, arma::mat param,
-                  int p, bool constFlag, bool trendFlag, bool exogenFlag, 
+arma::mat makeVar(arma::mat Ystart, 
+                  arma::mat e, 
+                  arma::mat param,
+                  int p, 
+                  bool constFlag, 
+                  bool trendFlag, 
+                  bool exogenFlag, 
                   arma::mat exogen){
   // this function simulates a VAR(p)
   // Ystart is the first p start observations
@@ -50,7 +55,7 @@ arma::mat makeVar(arma::mat Ystart, arma::mat e, arma::mat param,
     for(int i = 0; i < exoCols; ++i){
       
       Y(arma::span(p, N - 1), arma::span(0, K - 1)) = 
-        Y(arma::span(p, N -1), arma::span(0, K - 1))
+        Y(arma::span(p, N - 1), arma::span(0, K - 1))
       + exogen.col(i) * param.row(exogenRowIndex);
     }
     

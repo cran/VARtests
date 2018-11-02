@@ -186,7 +186,6 @@ SEXP ACtestCpp(arma::mat z_e, arma::mat z, arma::mat e, int h, bool univariate,
     }
   }
   
-  
   Rcpp::List returnList;  
   returnList["multiReturnValue"] = multiReturnValue;
   returnList["uniReturnValue"] = uniReturnValue;
