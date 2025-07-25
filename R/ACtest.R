@@ -99,8 +99,7 @@ ACtest <- function(fit, h = 4, HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), uni
   
   class(returnValue) <-  c("ACtest", class(returnValue))
   
-  print(returnValue)
-  invisible(returnValue)
+  return(returnValue)
 }
 
 .checkArgs.ACtest <- function(){

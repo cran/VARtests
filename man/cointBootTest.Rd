@@ -15,7 +15,7 @@ The test is an implementation of Cavaliere, Rahbek & Taylor (2012, 2014), and is
 }
 \usage{
 cointBootTest(y, r = "sequence", p, model = 1, signif = 0.05, dummies = NULL, B = 999,
-boot_type = c("B", "WB"), WB_dist = c("rademacher", "normal", "mammen"))
+boot_type = c("B", "WB"), WB_dist = c("rademacher", "normal", "mammen"), verbose = TRUE)
 \method{print}{cointBootTest}(x, ...)
 }
 
@@ -53,13 +53,14 @@ either "B", "WB", or both. "B" uses the iid bootstrap algorithm, while "WB" uses
   \item{WB_dist}{
 The distribution used for the wild bootstrap. Either "rademacher", "normal", or "mammen".
 }
+\item{verbose}{
+  logical; if \code{TRUE}, prints progress messages and an estimated completion time during the bootstrap simulation.
+}
   \item{x}{Object with class attribute \sQuote{cointBootTest}.}
   \item{\dots}{further arguments passed to or from other methods.}
 }
 
 \details{
-
-\ifelse{latex}{
 
 Consider the \eqn{K}-dimensional heteroskedastic cointegrated VAR model of Cavaliere,
 Rahbek and Taylor (2014):
@@ -71,40 +72,37 @@ Rahbek and Taylor (2014):
 where \eqn{\boldsymbol{\alpha}}  and \eqn{\boldsymbol{\beta}}   are  \eqn{\left( K \times r \right)}  matrices of rank  \eqn{r<K}, the number  \eqn{r}  being the cointegration rank. \eqn{D_{t}} and \eqn{d_{t}} differ according to the \code{model} argument in the following manner:
 
 model 1: \eqn{D_{t}=0} and \eqn{d_{t}=0} (no deterministic
-terms) \cr 
-model 2: \eqn{D_{t}=1} and \eqn{d_{t}=0} (restricted constant) \cr
-model 3: \eqn{D_{t}=1} and \eqn{d_{t}=1} (restricted linear trend) \cr
+terms)  
+model 2: \eqn{D_{t}=1} and \eqn{d_{t}=0} (restricted constant) 
+model 3: \eqn{D_{t}=1} and \eqn{d_{t}=1} (restricted linear trend) 
 
 
 The likelihood ratio (LR) statistic for testing cointegration rank \eqn{r} against \eqn{K} is
 
 \deqn{
-Q_{r,T}=-T\sum_{i=r+1}^{K}\mbox{log}( 1 - \widehat{\lambda}_{i},),
+Q_{r,T}=-T\sum_{i=r+1}^{K}\text{log}( 1 - \widehat{\lambda}_{i},),
 }
 
 where the eigenvalues \eqn{\mathbf{\widehat{\lambda}}_{1}>\ldots >\mathbf{\widehat{\lambda}}_{K}} are the \eqn{K} largest solutions to a certain eigenvalue
-problem (see Johansen 1996). \cr 
+problem (see Johansen 1996).  
 
 
-\bold{Bootstrap and wild bootstrap algorithm of Cavaliere, et al. (2012, 2014):}
+\strong{Bootstrap and wild bootstrap algorithm of Cavaliere, et al. (2012, 2014):}
 
-\bold{1.} Estimate the model under  \eqn{H(r)} using Gaussian PMLE yielding the estimates \eqn{\boldsymbol{\widehat{\beta}}^{(r)}}, \eqn{\boldsymbol{\widehat{\alpha}}^{(r)}},
-\eqn{\boldsymbol{\widehat{\rho}}^{(r)}}, \eqn{\mathbf{\widehat{\Gamma}}_{1}^{(r)},\ldots,\mathbf{\widehat{\Gamma}}_{p-1}^{(r)}} and \eqn{\widehat{\bm{\phi}}^{(r)}}, together with the corresponding residuals, \eqn{\widehat{\bm{\varepsilon}}_{r,t}}. \cr
-\bold{2.} Check that the equation \eqn{| \widehat{\mathbf{A}}^{(r)}(z) |=0}, with \eqn{\widehat{\mathbf{A}}^{(r)}(z):=(1-z)\mathbf{I}_{K}-\boldsymbol{\widehat{\alpha}}^{(r)}\boldsymbol{\widehat{\beta}}^{(r)\prime}z-\sum_{i=1}^{p-1}\mathbf{\widehat{\Gamma}}_{i}^{(r)}(1-z)z^{i}}, has \eqn{K-r} roots equal to 1 and all other roots outside the unit circle. If so, procede to step 3. \cr
-\bold{3.} Construct the bootstrap sample recursively from 
+\strong{1.} Estimate the model under  \eqn{H(r)} using Gaussian PMLE yielding the estimates \eqn{\boldsymbol{\widehat{\beta}}^{(r)}}, \eqn{\boldsymbol{\widehat{\alpha}}^{(r)}},
+\eqn{\boldsymbol{\widehat{\rho}}^{(r)}}, \eqn{\mathbf{\widehat{\Gamma}}_{1}^{(r)},\ldots,\mathbf{\widehat{\Gamma}}_{p-1}^{(r)}} and \eqn{\widehat{\bm{\phi}}^{(r)}}, together with the corresponding residuals, \eqn{\widehat{\bm{\varepsilon}}_{r,t}}. 
+\strong{2.} Check that the equation \eqn{| \widehat{\mathbf{A}}^{(r)}(z) |=0}, with \eqn{\widehat{\mathbf{A}}^{(r)}(z):=(1-z)\mathbf{I}_{K}-\boldsymbol{\widehat{\alpha}}^{(r)}\boldsymbol{\widehat{\beta}}^{(r)\prime}z-\sum_{i=1}^{p-1}\mathbf{\widehat{\Gamma}}_{i}^{(r)}(1-z)z^{i}}, has \eqn{K-r} roots equal to 1 and all other roots outside the unit circle. If so, procede to step 3. 
+\strong{3.} Construct the bootstrap sample recursively from 
 \deqn{
 \Delta\mathbf{y}_{r,t}^{\ast}=\boldsymbol{\widehat{\alpha}}^{(r)}\boldsymbol{\widehat{\beta}}^{(r)\prime}\mathbf{y}_{r,t-1}^{\ast}+\sum_{i=1}^{p-1}\mathbf{\widehat{\Gamma}}_{i}^{(r)}\Delta\mathbf{y}_{r,t-i}^{\ast}+\boldsymbol{\widehat{\alpha}}^{(r)}\boldsymbol{\widehat{\rho}}^{(r)\prime}D_{t}+\widehat{\bm{\phi}}^{(r)}d_{t}+\bm{\varepsilon}_{r,t}^{\ast},\ \ \ \ t=1,\ldots ,T,
 }
-initialized at \eqn{\mathbf{y}_{r,j}^{\ast}=\mathbf{y}_{j},  j=1-p,\ldots,0}, and with the \eqn{T} bootstrap errors \eqn{\bm{\varepsilon}_{r,t}^{\ast}} generated using the residuals \eqn{\widehat{\bm{\varepsilon}}_{r,t}}. The bootstrap errors are generated depending on the \code{boot_type} argument in the following manner: \cr
-\code{boot_type = "B"}: The i.i.d. bootstrap, such that \eqn{\bm{\varepsilon}_{r,t}^{\ast}:=\mathbf{\widehat{\bm{\varepsilon}}}_{r,\mathcal{U}_{t}}}, where \eqn{\mathcal{U}_{t}, t=1,\ldots ,T} is an i.i.d. sequence of discrete uniform distributions on \eqn{\{1,2,\ldots, T\}}.  \cr
-\code{boot_type = "WB"}: The wild bootstrap, where for each \eqn{t=1,\ldots ,T},   \eqn{\bm{\varepsilon}_{r,t}^{\ast}:=\widehat{\bm{\varepsilon}}_{r,t}w_{t}}, where \eqn{w_{t}, t=1,\ldots ,T}, is an i.i.d. sequence distributed according to the \code{WB_dist} argument. \cr
-\bold{4.} Using the bootstrap sample, \eqn{\{\mathbf{y}_{r,t}^{\ast}\}}, and denoting by \eqn{\mathbf{\widehat{\lambda}}_{1}^{\ast}>\ldots >\mathbf{\widehat{\lambda}}_{K}^{\ast}} the ordered solutions to the bootstrap analogue of the eigenvalue problem, compute the bootstrap LR statistic \eqn{Q_{r,T}^{\ast}:=-T\sum_{i=r+1}^{K}\mbox{log}( 1 - \widehat{\lambda}_{i}^{\ast})}. Define the corresponding \eqn{p}-value as \eqn{p_{r,T}^{\ast}:=1-G_{r,T}^{\ast}(Q_{r,T})}, \eqn{G_{r,T}^{\ast}}(.) denoting the conditional (on the origional data) cdf of \eqn{Q_{r,T}^{\ast}}. \cr
-\bold{5.} The bootstrap test of \eqn{H(r)} against \eqn{H(K)} at level \eqn{\mathbf{\eta}} rejects \eqn{H(r)} if \eqn{p_{r,T}^{\ast}\leq\mathbf{\eta}}. \cr
+initialized at \eqn{\mathbf{y}_{r,j}^{\ast}=\mathbf{y}_{j},  j=1-p,\ldots,0}, and with the \eqn{T} bootstrap errors \eqn{\bm{\varepsilon}_{r,t}^{\ast}} generated using the residuals \eqn{\widehat{\bm{\varepsilon}}_{r,t}}. The bootstrap errors are generated depending on the \code{boot_type} argument in the following manner: 
+\code{boot_type = "B"}: The i.i.d. bootstrap, such that \eqn{\bm{\varepsilon}_{r,t}^{\ast}:=\mathbf{\widehat{\bm{\varepsilon}}}_{r,\mathcal{U}_{t}}}, where \eqn{\mathcal{U}_{t}, t=1,\ldots ,T} is an i.i.d. sequence of discrete uniform distributions on \eqn{\{1,2,\ldots, T\}}.  
+\code{boot_type = "WB"}: The wild bootstrap, where for each \eqn{t=1,\ldots ,T},   \eqn{\bm{\varepsilon}_{r,t}^{\ast}:=\widehat{\bm{\varepsilon}}_{r,t}w_{t}}, where \eqn{w_{t}, t=1,\ldots ,T}, is an i.i.d. sequence distributed according to the \code{WB_dist} argument. 
+\strong{4.} Using the bootstrap sample, \eqn{\{\mathbf{y}_{r,t}^{\ast}\}}, and denoting by \eqn{\mathbf{\widehat{\lambda}}_{1}^{\ast}>\ldots >\mathbf{\widehat{\lambda}}_{K}^{\ast}} the ordered solutions to the bootstrap analogue of the eigenvalue problem, compute the bootstrap LR statistic \eqn{Q_{r,T}^{\ast}:=-T\sum_{i=r+1}^{K}\text{log}( 1 - \widehat{\lambda}_{i}^{\ast})}. Define the corresponding \eqn{p}-value as \eqn{p_{r,T}^{\ast}:=1-G_{r,T}^{\ast}(Q_{r,T})}, \eqn{G_{r,T}^{\ast}}(.) denoting the conditional (on the original data) cdf of \eqn{Q_{r,T}^{\ast}}. 
+\strong{5.} The bootstrap test of \eqn{H(r)} against \eqn{H(K)} at level \eqn{\mathbf{\eta}} rejects \eqn{H(r)} if \eqn{p_{r,T}^{\ast}\leq\mathbf{\eta}}. 
 
 If \code{r = "sequence"}, the algorithm is repeated for each null hypothesis \eqn{H(r),  r=0,\ldots ,K-1}, and the first null hypothesis with a \eqn{p_{r,T}^{\ast}>\mathbf{\eta}} is selected as the cointegration rank. If \eqn{p_{r,T}^{\ast}\leq\mathbf{\eta}, r=0,\ldots ,K-1}, the rank selected is \eqn{\widehat{r}=K}.
-
-
-}{Please see the pdf version of the manual at the package's CRAN page for mathematical details of the test.}
 
 }
 
@@ -194,8 +192,7 @@ Johansen, S. (1996).
 
 
 \examples{
-\dontrun{
-
+\donttest{
 test <- cointBootTest(y = VodafoneCDS, r = "sequence", p = 2, model = 3, signif = 0.05, 
   dummies = NULL, B = 999, boot_type = c("B", "WB"), WB_dist = "rademacher")
 test

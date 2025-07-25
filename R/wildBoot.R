@@ -1,5 +1,5 @@
 wildBoot <- function(test, WBtype = c("recursive", "fixed"), B = 199,  WBdist = c("rademacher", "normal", "mammen"), 
-                     HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), univariate = FALSE){
+                     HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), univariate = FALSE, verbose = TRUE){
   
   .checkArgs.wildBoot()
   
@@ -84,8 +84,9 @@ wildBoot <- function(test, WBtype = c("recursive", "fixed"), B = 199,  WBdist = 
   numberOfErrors <- 0
   numberOfNA <- 0
   
-  
-  cat("\nWild Bootstrap simulations started at", format(startTime), "\n")
+  if (verbose) {
+    message("Wild Bootstrap simulations started at", format(startTime), "\n")
+  }
   
   percDone <- 10
   
@@ -139,8 +140,13 @@ wildBoot <- function(test, WBtype = c("recursive", "fixed"), B = 199,  WBdist = 
   # estimates the time needed to perform the B bootstrap tests:
   timeEst <- difftime(Sys.time(), startTime2ndB)
   timeEst <- round(difftime(startTime2ndB + timeEst * B, startTime2ndB), 1)
-  cat("\nEstimated time to complete the", B, "bootstrap simulations:", format(timeEst), "\n")
-  cat("Running Bootstrap: ")
+  
+  
+  if (verbose) {
+    message("Estimated time to complete the ", B, " bootstrap simulations: ", format(timeEst), "\n")
+    cat("Running Bootstrap simulations: ")
+  }
+
   
   # runs the rest of the B bootstrap simulations:
   b <- 3
@@ -185,12 +191,13 @@ wildBoot <- function(test, WBtype = c("recursive", "fixed"), B = 199,  WBdist = 
       }
     }
     
-    if((b / B) >= (percDone / 100)) {cat(percDone, "% ", sep = ""); percDone = percDone + 10}
+    if ((b / B) >= (percDone / 100)) {
+      if (verbose) cat(percDone, "% ", sep = "")
+      percDone <- percDone + 10
+    }
     b <- b + 1
     
   }
-  
-  cat("\n\n")
   
   if("recursive" %in% WBtype){
     WBr.pv <- (colSums(WBr.Q >= matrix(test$Q, nrow = nrow(WBr.Q), ncol = 5, byrow = TRUE)) + 1) / (B + 1)
@@ -227,9 +234,7 @@ wildBoot <- function(test, WBtype = c("recursive", "fixed"), B = 199,  WBdist = 
   matchCall <- match.call()
   returnValue <- .make.wildBoot()
   
-  print(returnValue)
-  invisible(returnValue)
-  
+  return(returnValue)
 }
 
 .make.wildBoot <- function(){
@@ -481,7 +486,7 @@ print.wildBoot <- function(x, ...){
     
   }
   
-  return(returnValue)
+  returnValue
 }
 
 .rwb <- function(N, WBdist){

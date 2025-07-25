@@ -12,7 +12,8 @@ This function runs Ahlgren and Catani's (2016) wild bootstrap (WB) test for erro
 \usage{
 wildBoot(test, WBtype = c("recursive", "fixed"), B = 199, 
          WBdist = c("rademacher", "normal", "mammen"), 
-         HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), univariate = FALSE)
+         HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), 
+         univariate = FALSE, verbose = TRUE)
 \method{print}{wildBoot}(x, ...)
 }
 
@@ -36,10 +37,12 @@ a vector of the \code{HCtype}'s used for the WB test. The types must have been u
   \item{univariate}{
 either \code{FALSE}, \code{TRUE}, or \code{"only"}. If \code{TRUE}, the test will also be performed univariatly, if \code{"only"}, only the univariate version will be used. For \code{TRUE} and \code{"only"}, the univariate version must have been used in the \code{test} object.
 }
+\item{verbose}{
+  logical; if \code{TRUE}, prints progress messages and an estimated completion time during the bootstrap simulation.
+}
   \item{x}{Object with class attribute \sQuote{wildBoot}.}
   \item{\dots}{further arguments passed to or from other methods.}
 }
-
 \value{
 
 a list of class \code{"wildBoot"}. 
@@ -99,11 +102,12 @@ Ahlgren, N. & Catani, P. (2016).
 \code{\link{ACtest}} for the test that is required to be run before the \code{wildBoot} function.
 }
 \examples{
-
-\dontrun{
+\donttest{
 fit <- VARfit(y = VodafoneCDS, p = 3, const = TRUE, trend = FALSE)
 test <- ACtest(fit = fit, h = 1, HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"))
+test
 wb <- wildBoot(test = test, WBtype = "recursive", B = 199, 
                WBdist = "rademacher",  HCtype = c("LM", "HC3"))
+wb               
 }
 }

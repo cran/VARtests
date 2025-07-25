@@ -1,5 +1,5 @@
 cointBootTest <- function(y, r = "sequence", p, model = 1, signif = .05, dummies = NULL, B = 999, 
-                          boot_type = c("B", "WB"), WB_dist = c("rademacher", "normal", "mammen")){
+                          boot_type = c("B", "WB"), WB_dist = c("rademacher", "normal", "mammen"), verbose = TRUE){
   
   # checks arguments
   .checkArgs.cointBootTest()
@@ -51,7 +51,8 @@ cointBootTest <- function(y, r = "sequence", p, model = 1, signif = .05, dummies
     Q[pos] <- vecm_est$Q
     
     if(n_simulations_done == 0){
-      cat("\nBootstrap simulations started at", format(startTime <- Sys.time()), "\n")
+      startTime <- Sys.time()
+      if (verbose) message("Bootstrap simulations started at ", format(startTime), "\n")
     } 
     
     if("B" %in% boot_type){
@@ -90,12 +91,16 @@ cointBootTest <- function(y, r = "sequence", p, model = 1, signif = .05, dummies
         if(n_simulations_done == 50){  
           timeEst <- difftime(Sys.time(), startTime) / 50
           timeEst <- round(difftime(startTime + timeEst * n_total_simulations, startTime), 1)
-          cat("\nEstimated time to complete the simulations:", format(timeEst), "\n")
-          cat("Running simulations: ")
+          if (verbose) {
+            message("Estimated time to complete the simulations: ", format(timeEst))
+            cat("Running simulations: ")
+          }
         }
         # prints the progress:
-        if(((n_simulations_done - 1) / n_total_simulations) >= (percDone / 100)) {cat(percDone, "% ", sep = ""); percDone = percDone + 10}
-        
+        if(((n_simulations_done - 1) / n_total_simulations) >= (percDone / 100)) {
+          if (verbose) cat(percDone, "% ", sep = "")
+          percDone = percDone + 10
+        }
       }
       
       B.pv[pos] <- (sum(B.Q[, pos] >= Q[pos]) + 1) / (B + 1)
@@ -137,12 +142,16 @@ cointBootTest <- function(y, r = "sequence", p, model = 1, signif = .05, dummies
         if(n_simulations_done == 50){ 
           timeEst <- difftime(Sys.time(), startTime) / 50
           timeEst <- round(difftime(startTime + timeEst * n_total_simulations, startTime), 1)
-          cat("\nEstimated time to complete the simulations:", format(timeEst), "\n")
-          cat("Running simulations: ")
+          if (verbose) {
+            message("\nEstimated time to complete the simulations:", format(timeEst), "\n")
+            cat("Running simulations: ")
+          }
         }
         # prints the progress:
-        if(((n_simulations_done - 1) / n_total_simulations) >= (percDone / 100)) {cat(percDone, "% ", sep = ""); percDone = percDone + 10}
-        
+        if(((n_simulations_done - 1) / n_total_simulations) >= (percDone / 100)) {
+          if (verbose) cat(percDone, "% ", sep = "")
+          percDone = percDone + 10
+        }
       }
       
       WB.pv[pos] <- (sum(WB.Q[, pos] >= Q[pos]) + 1) / (B + 1)
@@ -159,7 +168,7 @@ cointBootTest <- function(y, r = "sequence", p, model = 1, signif = .05, dummies
     residuals[[length(residuals) + 1]] <- vecm_est$residuals
   }
   
-  cat("100%\n")
+  if (verbose) cat("100%\n")
   
   if("B" %in% boot_type){
     if(r[[1]] == "sequence" && is.na(B.r)) B.r <- ncol(y)

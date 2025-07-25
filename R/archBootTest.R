@@ -1,5 +1,5 @@
 archBootTest <- function(fit, h = 2, B = 499, CA = TRUE, ET = TRUE, MARCH = TRUE, 
-                         dist = "norm", skT.param = c(0, 1, 0, 5)){
+                         dist = "norm", skT.param = c(0, 1, 0, 5), verbose = TRUE){
   
   .checkArgs.archBootTest
   
@@ -180,16 +180,21 @@ archBootTest <- function(fit, h = 2, B = 499, CA = TRUE, ET = TRUE, MARCH = TRUE
     # runs the ET test:
     if(ET) ET_LMStar[b] <- computeET_LM(Wj, h)
     
-    # prints infromation about the progress:
+    # prints information about the progress:
     if(b == 1) startTime2ndB <- Sys.time()
     if(b == 2){
       timeEst <- difftime(Sys.time(), startTime2ndB)
       timeEst <- round(difftime(startTime2ndB + timeEst * B, startTime2ndB), 1)
-      cat("\nEstimated time to complete the", B, "bootstrap simulations:", format(timeEst), "\n")
-      cat("Running Bootstrap: ")
+      if (verbose){
+        cat("\nEstimated time to complete the", B, "bootstrap simulations:", format(timeEst), "\n")
+        cat("Running Bootstrap: ")
+      }
     }
     if(b > 2){
-      if ((b / B) >= (percDone / 100)) {cat(percDone, "% ", sep = ""); percDone = percDone + 10}
+      if ((b / B) >= (percDone / 100)) {
+        if (verbose) cat(percDone, "% ", sep = "")
+        percDone = percDone + 10
+      }
     }
     
   } 
@@ -261,9 +266,7 @@ archBootTest <- function(fit, h = 2, B = 499, CA = TRUE, ET = TRUE, MARCH = TRUE
   
   class(returnValue) <-  c("archBootTest", class(returnValue))
   
-  print(returnValue)
-  invisible(returnValue)
-  
+  return(returnValue)
 }
 
 .checkArgs.archBootTest <- function(){

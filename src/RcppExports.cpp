@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // ACtestCpp
 SEXP ACtestCpp(arma::mat z_e, arma::mat z, arma::mat e, int h, bool univariate, bool LM, bool HC0, bool HC1, bool HC2, bool HC3);
 RcppExport SEXP _VARtests_ACtestCpp(SEXP z_eSEXP, SEXP zSEXP, SEXP eSEXP, SEXP hSEXP, SEXP univariateSEXP, SEXP LMSEXP, SEXP HC0SEXP, SEXP HC1SEXP, SEXP HC2SEXP, SEXP HC3SEXP) {

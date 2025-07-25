@@ -20,7 +20,7 @@ ACtest(fit, h = 4, HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"), univariate = FA
 \arguments{
 
   \item{fit}{
-an object of class \code{"VARfit"} that was returned by the \code{\link{VARfit}} function, or an object of class \code{"verest"} from the function \code{"VAR"} in the \code{"vars"} package.
+an object of class \code{"VARfit"} that was returned by the \code{\link{VARfit}} function, or an object of class \code{"verest"} from the function \code{\link[vars:VAR]{vars::VAR}} in the \pkg{vars} package.
 }
   \item{h}{
 the lag length of the alternative VAR(h) model for the errors. 
@@ -37,11 +37,9 @@ either \code{FALSE}, \code{TRUE}, or \code{"only"}. If \code{TRUE}, the test wil
 
 \details{
 
-\ifelse{latex}{
-
 To run the wild bootstrap version of the test, please use the output from this function with the function \code{\link{wildBoot}}.
 
-\bold{Mathematical details}
+\strong{Mathematical details}
 
 The tests for error AC are based on the least squares (LS) residuals from the
 \eqn{K}-dimensional vector autoregressive (VAR) model with \eqn{p} lags (abstracting from
@@ -49,8 +47,8 @@ deterministic terms):
 
 \deqn{
 \mathbf{y}_{t}=\mathbf{\Pi }_{1}\mathbf{y}_{t-1}+\cdots +\mathbf{\Pi }_{p}
-\mathbf{y}_{t-p}+\mathbf{u}_{t},\quad \mbox{E}(\mathbf{u}_{t})=\mathbf{0}
-,\quad \mbox{E}(\mathbf{u}_{t}\mathbf{u}_{t}^{\prime })=\mathbf{\Omega},\ \ \ \ t=1,\ldots ,N.
+\mathbf{y}_{t-p}+\mathbf{u}_{t},\quad \text{E}(\mathbf{u}_{t})=\mathbf{0}
+,\quad \text{E}(\mathbf{u}_{t}\mathbf{u}_{t}^{\prime })=\mathbf{\Omega},\ \ \ \ t=1,\ldots ,N.
 }
 
 The LS residuals are
@@ -71,15 +69,15 @@ _{t-1}+\cdots +\mathbf{\Pi }_{p}\mathbf{y}_{t-p} + \mathbf{D}_{1}\widehat{\mathb
 \mathbf{D}_{h}\widehat{\mathbf{u}}_{t-h}+\mathbf{e}_{t}
 }
 \deqn{
-=(\mathbf{Z}_{t-1}^{\prime }\otimes \mathbf{I}_{K})\bold{\phi }+(\widehat{%
-\mathbf{U}}_{t-1}^{\prime }\otimes \mathbf{I}_{K})\bold{\psi }+\mathbf{e}%
-_{t}, \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+=(\mathbf{Z}_{t-1}^{\prime }\otimes \mathbf{I}_{K})\boldsymbol{\phi }+(\widehat{%
+\mathbf{U}}_{t-1}^{\prime }\otimes \mathbf{I}_{K})\boldsymbol{\psi }+\mathbf{e}%
+_{t}, \ 
 }
-where \eqn{\mathbf{Z}_{t-1}=(\mathbf{y}_{t-1}^{\prime },\ldots ,\mathbf{y}_{t-p}^{\prime })^{\prime }}, \eqn{\bold{\phi }
-=\mbox{vec}(\mathbf{Pi}_{1},\ldots ,\mathbf{Pi}_{p})^{\prime }}, \eqn{\widehat{\mathbf{U}}%
+where \eqn{\mathbf{Z}_{t-1}=(\mathbf{y}_{t-1}^{\prime },\ldots ,\mathbf{y}_{t-p}^{\prime })^{\prime }}, \eqn{\boldsymbol{\phi }
+=\text{vec}(\mathbf{Pi}_{1},\ldots ,\mathbf{Pi}_{p})^{\prime }}, \eqn{\widehat{\mathbf{U}}%
 _{t-1}=(\widehat{\mathbf{u}}_{t-1}^{\prime },\ldots ,\widehat{%
-\mathbf{u}}_{t-h}^{\prime })^{\prime }} and \eqn{\bold{\psi } =\mbox{vec}(\mathbf{D}_{1},\ldots
-,\mathbf{D}_{h})^{\prime }}.The symbol \eqn{\otimes } denotes the Kronecker product and
+\mathbf{u}}_{t-h}^{\prime })^{\prime }} and \eqn{\boldsymbol{\psi } =\text{vec}(\mathbf{D}_{1},\ldots
+,\mathbf{D}_{h})^{\prime }}. The symbol \eqn{\otimes } denotes the Kronecker product and
 the symbol vec denotes the column vectorisation operator. The first \eqn{h}
 values of the residuals \eqn{\widehat{\mathbf{u}}_{t}} are set to zero in the
 auxiliary model, so that the series length is equal to the series length in
@@ -87,10 +85,13 @@ the original VAR model.
 
 The LM statistic for error AC of order \eqn{h} is given by%
 \deqn{
-Q_{\mbox{LM}}(h)=N\widehat{\bold{\psi }}^{\prime }(\widehat{\boldsymbol{\Sigma 
-}}^{\psi \psi })^{-1}\widehat{\bold{\psi }},  \label{LMstat}
+  Q_{\text{LM}}(h)
+   = N \widehat{\boldsymbol{\psi}}^{\prime}
+     \bigl(\widehat{\boldsymbol{\Sigma}}^{\psi\psi}\bigr)^{-1}
+     \widehat{\boldsymbol{\psi}}
 }
-where \eqn{\widehat{\bold{\psi }}} is the LS estimate of \eqn{\bold{\psi } 
+
+where \eqn{\widehat{\boldsymbol{\psi }}} is the LS estimate of \eqn{\boldsymbol{\psi } 
 } and \eqn{\widehat{\boldsymbol{\Sigma }}^{\psi \psi }} is the block of 
 
 \deqn{
@@ -106,7 +107,7 @@ _{t-1}^{\prime }\otimes \mathbf{I}_{K}%
 \end{array}%
 \right] \right) ^{-1}
 }
-corresponding to \eqn{\bold{\psi }}. Here \eqn{\widehat{\boldsymbol{\Sigma }}_{\mathbf{u}%
+corresponding to \eqn{\boldsymbol{\psi }}. Here \eqn{\widehat{\boldsymbol{\Sigma }}_{\mathbf{u}%
 }=N^{-1}\sum_{t=1}^{N}\widehat{\mathbf{u}}_{t}\widehat{\mathbf{u}}%
 _{t}^{\prime }} is the estimator of the error covariance matrix from the
 VAR model.
@@ -114,10 +115,12 @@ VAR model.
 The multivariate heteroskedasticity-consistent covariance matrix estimator (HCCME)
 for the auxilary model is given by (Hafner and Herwartz 2009)
 \deqn{
-\mathbf{V}_{N}^{-1}\mathbf{W}_{N}\mathbf{V}_{N}^{-1}=(\boldsymbol{\Gamma }%
-_{N}\otimes \mathbf{I}_{K})^{-1}\mathbf{W}_{N}(\boldsymbol{\Gamma }%
-_{N}\otimes \mathbf{I}_{K})^{-1},  \label{HCCME}
+  \mathbf{V}_{N}^{-1}\mathbf{W}_{N}\mathbf{V}_{N}^{-1}
+    = (\boldsymbol{\Gamma}_{N}\otimes \mathbf{I}_{K})^{-1}
+      \mathbf{W}_{N}
+      (\boldsymbol{\Gamma}_{N}\otimes \mathbf{I}_{K})^{-1}
 }
+
 where%
 \deqn{
 \mathbf{V}_{N}  =\boldsymbol{\Gamma }_{N}\otimes \mathbf{I}_{K},
@@ -147,34 +150,27 @@ where%
 \right) \otimes (\widehat{\mathbf{u}}_{t}\widehat{\mathbf{u}}_{t}^{\prime }).
 }
 
-The HCCME-based LM statistics for error AC are obtained from the expression for \eqn{Q_{\mbox{LM}}(h)}
+The HCCME-based LM statistics for error AC are obtained from the expression for \eqn{Q_{\text{LM}}(h)}
 by replacing \eqn{\widehat{\boldsymbol{\Sigma }}^{\psi \psi }} by the block of \eqn{%
 \mathbf{V}_{N}^{-1}\mathbf{W}_{N}\mathbf{V}_{N}^{-1}=(\Gamma _{N}\otimes \mathbf{I}_{K})^{-1}\mathbf{W}_{N}(\Gamma
-_{N}\otimes \mathbf{I}_{K})^{-1}} corresponding to \eqn{\bold{\psi }} and with \eqn{%
+_{N}\otimes \mathbf{I}_{K})^{-1}} corresponding to \eqn{\boldsymbol{\psi }} and with \eqn{%
 \widehat{\mathbf{u}}_{t}} defined by \eqn{HC_{0}}, \eqn{HC_{1}}, \eqn{HC_{2}} and \eqn{HC_{3}
-}, respectively. \cr
+}, respectively. 
 
-\eqn{HC_{0}} uses \eqn{\widehat{\mathbf{u}}_{t}\widehat{\mathbf{u}}_{t}^{\prime }}. \cr \cr
+\eqn{HC_{0}} uses \eqn{\widehat{\mathbf{u}}_{t}\widehat{\mathbf{u}}_{t}^{\prime }}.  
 \eqn{HC_{1}} multiplies the elements of \eqn{\widehat{\mathbf{u}}_{t}\widehat{\mathbf{u}}_{t}^{\prime }} by 
-\eqn{N/(N-Kp)}. \cr \cr
+\eqn{N/(N-Kp)}.  
 \eqn{HC_{2}} replaces \eqn{\widehat{%
 \mathbf{u}}_{t}} by \eqn{\widehat{\mathbf{u}}_{t}/(1-h_{t})^{1/2}}, where \eqn{h_{t}=\mathbf{Z}_{t}(\mathbf{Z}^{\prime }\mathbf{Z})^{-1}\mathbf{Z}_{t}^{\prime }} is the \eqn{t}th
 diagonal element of \eqn{\mathbf{Z}(\mathbf{Z}^{\prime }\mathbf{Z})^{-1}\mathbf{Z}^{\prime }}, and \eqn{\mathbf{%
-Z}=(\mathbf{Z}_{0},\ldots ,\mathbf{Z}_{N-1})}.\cr \cr
-\eqn{HC_{3}} replaces \eqn{\widehat{\mathbf{u}}_{t}} by \eqn{\widehat{\mathbf{u}}_{t}/(1-h_{t})}. \cr \cr
+Z}=(\mathbf{Z}_{0},\ldots ,\mathbf{Z}_{N-1})}. 
+\eqn{HC_{3}} replaces \eqn{\widehat{\mathbf{u}}_{t}} by \eqn{\widehat{\mathbf{u}}_{t}/(1-h_{t})}.  
 
 See MacKinnon and White (1985) for details.
 
 The recursive-design wild bootstrap (WB) tests for error AC are computed using
 Algorithm 1 in Ahlgren and Catani (2016). The Fixed-design WB tests for error AC
-are computed using Algorithm 2 in Ahlgren and Catani (2016).
-
-}{To run the wild bootstrap version of the test, please use the output from this function with the function \code{\link{wildBoot}}.
-
-For mathematical details of the test, see the pdf version of the manual at the package's CRAN web page.}
-
-
-}
+are computed using Algorithm 2 in Ahlgren and Catani (2016).}
 
 
 \value{
@@ -237,9 +233,8 @@ MacKinnon, J. G. and White, H. (1985).
 }
 
 \examples{
-
 fit <- VARfit(y = VodafoneCDS, p = 3, const = TRUE, trend = FALSE)
 test <- ACtest(fit = fit, h = 1, HCtype = c("LM", "HC0", "HC1", "HC2", "HC3"))
-
+test
 }
 

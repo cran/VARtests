@@ -5,7 +5,7 @@
 VAR(p) (Vector Autoregression) Model Fitting.
 }
 \description{
-Estimates a VAR(p) model from data. The function's purpose is to be used before the \code{\link{ACtest}} or \code{\link{archBootTest}} functions, and doesn't have the same full functionality as for example the function \code{\link[vars:VAR]{VAR}} in the \code{vars} package.
+Estimates a VAR(p) model from data. The function's purpose is to be used before the \code{\link{ACtest}} or \code{\link{archBootTest}} functions, and doesn't have the same full functionality as for example the function \code{\link[vars:VAR]{vars::VAR}} in the \pkg{vars} package.
 }
 \usage{
 VARfit(y, p = 1, const = TRUE, trend = FALSE, exogen = NULL, univariate = FALSE)
@@ -31,8 +31,6 @@ a matrix or vector of exogenous variable(s). Must have the same number of rows a
 if \code{TRUE} univariate (i.e. an AR(p) model for each timeseries) estimates will also be printed.
 }
 }
-
-
 
 \value{
 a list of class \code{"VARfit"} with the following slots: 
@@ -95,7 +93,6 @@ a list of class \code{"VARfit"} with the following slots:
 \code{\link{ACtest}} to test for error autocorrelations, and \code{\link{archBootTest}} to test for ARCH errors.
 }
 \examples{
-
 fit <- VARfit(y = VodafoneCDS, p = 3, const = TRUE, trend = FALSE)
-
+fit
 }

@@ -76,9 +76,7 @@ VARfit <- function(y, p = 1, const = TRUE, trend = FALSE, exogen = NULL, univari
                       time = difftime(Sys.time(), currentTime, units = "secs"))
   
   class(returnValue) <-  c("VARfit", class(returnValue))
-  
-  print(returnValue)
-  invisible(returnValue)
+  return(returnValue)
 }
 
 .checkArgs.VARfit <- function(){

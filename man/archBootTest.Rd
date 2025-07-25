@@ -18,7 +18,7 @@ The tests of Eklund and \enc{Teräsvirta}{Terasvirta} (2007), as well as the Mul
 }
 \usage{
 archBootTest(fit, h = 2, B = 499, CA = TRUE, ET = TRUE, MARCH = TRUE,
-             dist = "norm", skT.param = c(0, 1, 0, 5))
+             dist = "norm", skT.param = c(0, 1, 0, 5), verbose = TRUE)
 \method{print}{archBootTest}(x, ...)
 }
 
@@ -26,7 +26,7 @@ archBootTest(fit, h = 2, B = 499, CA = TRUE, ET = TRUE, MARCH = TRUE,
 \arguments{
 
   \item{fit}{
-an object of class \code{"VARfit"} that was returned by the \code{\link{VARfit}} function, or an object of class \code{"verest"} from the function \code{\link[vars:VAR]{VAR}} in the \code{vars} package.
+an object of class \code{"VARfit"} that was returned by the \code{\link{VARfit}} function, or an object of class \code{"verest"} from the function \code{\link[vars:VAR]{vars::VAR}} in the \pkg{vars} package.
 }
   \item{h}{
 the lag length of the alternative VAR(h) model for the errors. 
@@ -49,13 +49,14 @@ the error distribution. Either \code{"norm"} for the standard normal distributio
   \item{skT.param}{
 a vector of four parameters for the skew-t distribution in case \code{"skT"} was used for the \code{dist} argument. The function \code{\link[sn:dmst]{rmst}} is used to draw the errors and the parameters are passed as \code{skT.param = c(xi, Omega, alpha, nu)}
 }
+\item{verbose}{
+  logical; if \code{TRUE}, prints progress messages and an estimated completion time during the bootstrap simulation.
+}
   \item{x}{Object with class attribute \sQuote{archBootTest}.}
   \item{\dots}{further arguments passed to or from other methods.}
 }
 
 \details{
-
-\ifelse{latex}{
 
 All tests for ARCH are based on Cholesky-standardised least squares (LS)
 residuals from the \eqn{K}-dimensional vector autoregressive (VAR) model with \eqn{p}
@@ -63,8 +64,8 @@ lags (abstracting from deterministic terms):
 
 \deqn{
 \mathbf{y}_{t}=\mathbf{\Pi }_{1}\mathbf{y}_{t-1}+\cdots +\mathbf{\Pi }_{p}
-\mathbf{y}_{t-p}+\mathbf{u}_{t},\quad \mbox{E}(\mathbf{u}_{t})=\mathbf{0}
-,\quad \mbox{E}(\mathbf{u}_{t}\mathbf{u}_{t}^{\prime })=\mathbf{\Omega},\ \ \ \ t=1,\ldots ,N.
+\mathbf{y}_{t-p}+\mathbf{u}_{t},\quad \text{E}(\mathbf{u}_{t})=\mathbf{0}
+,\quad \text{E}(\mathbf{u}_{t}\mathbf{u}_{t}^{\prime })=\mathbf{\Omega},\ \ \ \ t=1,\ldots ,N.
 }
 
 The LS residuals are
@@ -105,7 +106,7 @@ The LM statistic has the form
 \deqn{
 LM_{i}=(N-p)R_{i}^{2},
 }
-where \eqn{R_{i}^{2}} is \eqn{R^{2}} from the auxiliary regression for equation \eqn{i}. \cr 
+where \eqn{R_{i}^{2}} is \eqn{R^{2}} from the auxiliary regression for equation \eqn{i}.  
 
 The combined LM statistic (Dufour et al. 2010, Catani and Ahlgren 2016) is
 given by
@@ -117,37 +118,37 @@ the asymptotic \eqn{\chi ^{2}(h)} distibution. The test is only available as a
 bootstrap test. The bootstrap \eqn{p}-value is simulated using Bootstrap
 Algorithm 1 of Catani and Ahlgren (2016) if the errors are normal,
 \deqn{
-w_{i1},\ldots ,w_{iT}\sim \mbox{N}(0,1),
+w_{i1},\ldots ,w_{iT}\sim \text{N}(0,1),
 }
 
 and Bootstrap Algorithm 2 if the errors are skew-\eqn{t}  (by setting the function argument \code{dist = "skT"}),
 \deqn{
-w_{i1},\ldots ,w_{iT}\sim \mbox{skT}(0,1;\lambda ,v),
+w_{i1},\ldots ,w_{iT}\sim \text{skT}(0,1;\lambda ,v),
 }
 
 where \eqn{\lambda } is the skewness parameter and \eqn{v} is the degrees-of-freedom
-parameter of the skew-\eqn{t} distribution. These parameters can be set with the \code{skT.param} argument. \cr 
+parameter of the skew-\eqn{t} distribution. These parameters can be set with the \code{skT.param} argument.  
 
 The multivariate LM test for ARCH of order \eqn{h} is a generalisation of the
 univariate test, and is based on the auxiliary regression
 
 \deqn{
-\mbox{vech}(\widetilde{\mathbf{u}}_{t}\widetilde{\mathbf{u}}_{t}^{\prime })=\mathbf{b}
-_{0}+\mathbf{B}_{1} \mbox{vech}(\widetilde{\mathbf{u}}_{t-1}\widetilde{\mathbf{u}}_{t-1}^{\prime })
-+\cdots+\mathbf{B}_{h} \mbox{vech}(\widetilde{\mathbf{u}}_{t-h}\widetilde{\mathbf{u}}_{t-h}^{\prime })
+\text{vech}(\widetilde{\mathbf{u}}_{t}\widetilde{\mathbf{u}}_{t}^{\prime })=\mathbf{b}
+_{0}+\mathbf{B}_{1} \text{vech}(\widetilde{\mathbf{u}}_{t-1}\widetilde{\mathbf{u}}_{t-1}^{\prime })
++\cdots+\mathbf{B}_{h} \text{vech}(\widetilde{\mathbf{u}}_{t-h}\widetilde{\mathbf{u}}_{t-h}^{\prime })
 +\mathbf{e}_{t},
 }
 
-where \eqn{\mbox{vech}} is the half-vectorisation operator. The null hypothesis is \eqn{H_{0}:\mathbf{B
+where \eqn{\text{vech}} is the half-vectorisation operator. The null hypothesis is \eqn{H_{0}:\mathbf{B
 }_{1}=\cdots =\mathbf{B}_{h}=\mathbf{0}} against \eqn{H_{1}:\mathbf{B}_{j}\neq 
 \mathbf{0\!}} for at least one \eqn{j\in \{1,\ldots ,h\}.} The
 multivariate LM statistic has the form
 
 \deqn{
-MLM=\frac{1}{2}(N-p)K(K+1)-(N-p)\mbox{tr}(\widehat{\mathbf{\Omega}}_{\mbox{vech}}\widehat{\mathbf{\Omega}}^{-1}),
+MLM=\frac{1}{2}(N-p)K(K+1)-(N-p)\text{tr}(\widehat{\mathbf{\Omega}}_{\text{vech}}\widehat{\mathbf{\Omega}}^{-1}),
 }
 
-where \eqn{\widehat{\mathbf{\Omega }}_{\mbox{vech}}} is the estimator of the
+where \eqn{\widehat{\mathbf{\Omega }}_{\text{vech}}} is the estimator of the
 error covariance matrix from the auxiliary regression and \eqn{\widehat{\mathbf{
 \Omega }}} \eqn{=N^{-1}\sum_{t=1}^{N}\widetilde{\mathbf{u}}_{t}\widetilde{
 \mathbf{u}}_{t}^{\prime }} is the estimator of the error covariance matrix
@@ -157,14 +158,14 @@ available as an asymptotic test using the asymptotic \eqn{\chi
 ^{2}(K^{2}(K+1)^{2}h/4)} distribution to derive the \eqn{p}-value, and as a
 bootstrap test. The bootstrap \eqn{p}-value is simulated using Bootstrap
 Algorithms 1 and 2 of Catani and Ahlgren (2016). The asymptotic validity of
-the bootstrap multivariate LM test has not been established. \cr
+the bootstrap multivariate LM test has not been established. 
 
 
 The Eklund and \enc{Teräsvirta}{Terasvirta} (2007) LM test of constant error covariance
 matrix assumes the alternative hypothesis is a constant conditional
 correlation autoregressive conditional heteroskedasticity (CCC-ARCH) process
 of order \eqn{h}: \eqn{\mathbf{H}_{t}=\mathbf{D}_{t}\mathbf{PD}_{t}}, where \eqn{\mathbf{
-D}_{t}=\mbox{diag}(h_{1t}^{1/2},\ldots ,h_{Kt}^{1/2})} is a diagonal matrix of conditional
+D}_{t}=\text{diag}(h_{1t}^{1/2},\ldots ,h_{Kt}^{1/2})} is a diagonal matrix of conditional
 standard deviations of the errors \eqn{\{\mathbf{u}_{t}\}} and \eqn{\mathbf{P}=(\rho
 _{ij})}, \eqn{i,j=1,\ldots ,K}, is a positive definite matrix of conditional
 correlations. The conditional variance \eqn{\mathbf{h}_{t}=(h_{1t},\ldots
@@ -179,8 +180,8 @@ _{h}} are \eqn{K\times K} diagonal matrices and \eqn{\boldsymbol{u}
 _{t}^{(2)}=(u_{1t}^{2},\ldots ,u_{Kt}^{2})^{\prime }}. 
 
 The null hypothesis
-is \eqn{H_{0}:\mbox{diag}(\mathbf{A}_{1})=\cdots =\mbox{diag}(\mathbf{A}_{h})=\mathbf{0}} against \eqn{H_{1}:
-\mbox{diag}(\mathbf{A}_{j})\neq \mathbf{0\!}} for at least one \eqn{j\in
+is \eqn{H_{0}:\text{diag}(\mathbf{A}_{1})=\cdots =\text{diag}(\mathbf{A}_{h})=\mathbf{0}} against \eqn{H_{1}:
+\text{diag}(\mathbf{A}_{j})\neq \mathbf{0\!}} for at least one \eqn{j\in
 \{1,\ldots ,h\}}. The LM statistic has the form 
 \deqn{
 LM_{CCC}=(N-p)\mathbf{s}(\widehat{\boldsymbol{\theta }})^{\prime }\mathbf{I}(
@@ -196,9 +197,6 @@ the asymptotic \eqn{\chi ^{2}(Kh)} distribution to derive the \eqn{p}-value, and
 bootstrap test. The bootstrap \eqn{p}-value is simulated using Bootstrap
 Algorithms 1 and 2 of Catani and Ahlgren (2016). The asymptotic validity of
 the bootstrap \eqn{LM_{CCC}} test has not been established.
-}{See the pdf version of the manual at the package's CRAN page for mathematical details of the test.}
-
-
 }
 
 \value{
@@ -312,9 +310,8 @@ Engle, R.F. (1982). \emph{Autoregressive conditional heteroscedasticity with est
 }
 
 \examples{
-
 fit <- VARfit(y = VodafoneCDS, p = 3, const = TRUE, trend = FALSE)
 test <- archBootTest(fit = fit, h = 5, B = 199, CA = TRUE, ET = TRUE, MARCH = TRUE, dist = "norm")
-
+test
 }
 
